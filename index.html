@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="logo.png" />
+    <title>SVPN</title>
+  </head>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Poppins");
+
+    :root {
+      --selection-color: white;
+      --selection-background-color: blue;
+    }
+
+    ::-webkit-scrollbar {
+      background-color: rgb(7, 7, 7);
+      height: 1.5vh;
+      width: 0.7vw;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: rgb(221, 214, 214);
+      border-radius: 10px;
+      transition: 0.4s;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: white;
+    }
+
+    ::-moz-selection {
+      color: var(--selection-color);
+      background-color: var(--selection-background-color);
+    }
+
+    ::selection {
+      color: var(--selection-color);
+      background-color: var(--selection-background-color);
+    }
+
+    * {
+      font-family: "Poppins", Arial, sans-serif;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      -webkit-user-drag: none;
+      -moz-user-drag: none;
+      -ms-user-drag: none;
+    }
+
+    *:focus {
+      outline: none;
+    }
+
+    body {
+      background-color: rgb(5, 5, 5);
+      overflow: hidden;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      z-index: 2;
+    }
+
+    img,
+    button {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus {
+      outline: none;
+    }
+
+    #welcome {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 2.3rem;
+      margin: 20px 2% 20px 10px;
+      color: whitesmoke;
+    }
+
+    #explanations {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 20px 2% 20px 10px;
+      color: rgb(221, 220, 220);
+    }
+
+    .name-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #name {
+      display: flex;
+      text-align: left;
+      color: white;
+      background: none;
+      border-style: solid;
+      border-color: rgb(185, 185, 185);
+      border-radius: 20px;
+      border-width: 1px;
+      padding: 10px;
+      width: 250px;
+      font-size: 1.1rem;
+      transition: 0.2s linear;
+    }
+
+    #name:hover {
+      border-color: white;
+      box-shadow: 0 0 10px white, 0 0 20px black;
+    }
+
+    #name:active,
+    #name:focus,
+    #name:focus-visible {
+      border-color: #060cbe;
+      box-shadow: 0 0 10px #060cbe, 0 0 20px #060cbe, 0 0 30px black;
+    }
+
+    .submit-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #submit {
+      width: 100px;
+      height: 40px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 40px;
+      border-style: solid;
+      border-width: 1.5px;
+      background: none;
+      border-color: white;
+      color: white;
+      box-shadow: 0 0 10px white;
+      transition: 0.2s linear;
+    }
+
+    #submit:hover,
+    #submit:active {
+      border-color: yellowgreen;
+      color: white;
+      background-color: yellowgreen;
+      box-shadow: 0 0 10px yellowgreen, 0 0 20px yellowgreen;
+    }
+
+    #login {
+      display: none;
+      opacity: 1;
+      transition: opacity 1s linear;
+    }
+
+    #registered {
+      opacity: 0;
+      transition: opacity 0.2s linear;
+    }
+
+    #loading {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(5, 5, 5);
+      z-index: 100000;
+    }
+
+    .loading-icon-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .loading-icon {
+      position: fixed;
+      height: 150px;
+      top: 120px;
+    }
+
+    .loader {
+      position: fixed;
+      top: 440px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .lds-dual-ring {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+    }
+
+    .lds-dual-ring:after {
+      content: " ";
+      display: block;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 6px solid #fff;
+      border-color: #fff transparent #fff transparent;
+      animation: rotate 1.2s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-text-div {
+      position: fixed;
+      top: 330px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .skip-load {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .skip {
+      position: fixed;
+      background-color: #060cbe;
+      color: white;
+      box-shadow: 0 0 10px #060cbe, 0 0 20px #060cbe, 0 0 30px black;
+      top: 520px;
+      border: none;
+      height: 50px;
+      width: 150px;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .skip:hover,
+    .skip:active {
+      box-shadow: 0 0 10px #060cbe, 0 0 20px #060cbe, 0 0 30px #060cbe,
+        0 0 40px black;
+    }
+
+    #loading2 {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(5, 5, 5);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 1s linear;
+    }
+
+    .loading2-icon-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .loading2-icon {
+      position: fixed;
+      height: 150px;
+      top: 30%;
+      animation: rotate 2s linear infinite;
+      box-shadow: 0 0 10px #060cbe, 0 0 20px #060cbe, 0 0 30px #060cbe,
+        0 0 40px black;
+      border-radius: 100%;
+    }
+
+    .logo-div {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .logo {
+      height: 120px;
+      box-shadow: 0 0 10px #060cbe, 0 0 20px #060cbe, 0 0 30px #060cbe,
+        0 0 40px black;
+      border-radius: 100%;
+    }
+
+    #success_results {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(5, 5, 5);
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 1s linear;
+    }
+
+    .success-icon-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .success-icon {
+      position: fixed;
+      height: 150px;
+      top: 70px;
+      box-shadow: 0 0 10px #ff9400, 0 0 20px #ff9400, 0 0 30px #ff9400,
+        0 0 40px black;
+      border-radius: 100%;
+    }
+
+    .success-text-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .success-text {
+      position: fixed;
+      top: 270px;
+    }
+
+    .continue {
+      position: fixed;
+      top: 340px;
+      cursor: pointer;
+      background: yellowgreen;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      height: 50px;
+      font-size: 1.2rem;
+      width: 120px;
+      transition: 0.2s linear;
+      box-shadow: 0 0 10px yellowgreen, 0 0 20px black;
+    }
+
+    .continue:hover,
+    .continue:active {
+      box-shadow: 0 0 10px yellowgreen, 0 0 20px yellowgreen, 0 0 30px black;
+    }
+
+    #fail_results {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(5, 5, 5);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 1s linear;
+    }
+
+    .fail-icon-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .fail-icon {
+      position: fixed;
+      height: 150px;
+      top: 70px;
+      box-shadow: 0 0 10px #b82810, 0 0 20px #b82810, 0 0 30px #b82810,
+        0 0 40px black;
+      border-radius: 100%;
+    }
+
+    .fail-text-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .fail-text {
+      position: fixed;
+      top: 270px;
+    }
+
+    .return {
+      position: fixed;
+      top: 340px;
+      cursor: pointer;
+      background: #b82810;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      height: 50px;
+      font-size: 1.2rem;
+      width: 120px;
+      transition: 0.2s linear;
+      box-shadow: 0 0 10px #b82810, 0 0 20px black;
+    }
+
+    .return:hover,
+    .return:active {
+      box-shadow: 0 0 10px #b82810, 0 0 20px #b82810, 0 0 30px black;
+    }
+  </style>
+  <body>
+    <div id="loading">
+      <div class="loading-icon-div">
+        <img src="logo.png" class="loading-icon" />
+      </div>
+      <div class="loading-text-div">
+        <h1 id="loading-text">SVPN Loading...</h1>
+      </div>
+      <div class="loader">
+        <div class="lds-dual-ring"></div>
+      </div>
+      <div class="skip-load">
+        <button
+          class="skip"
+          onclick="document.getElementById('loading').style.display = 'none'"
+        >
+          Skip
+        </button>
+      </div>
+    </div>
+    <div id="loading2">
+      <div class="loading2-icon-div">
+        <img src="logo.png" class="loading2-icon" />
+      </div>
+    </div>
+    <div id="login" style="z-index: 10">
+      <div class="logo-div">
+        <img src="logo.png" class="logo" />
+      </div>
+      <h1 id="welcome">سلام! خوش آمدید</h1>
+      <p id="explanations">
+        برای دسترسی به خدمات لطفا نام خود را (بدون نام خانوادگی) وارد کنید
+      </p>
+      <p id="explanations" style="margin-top: -1%">
+        اگر نام شما توسط صاحب وبسایت ثبت شده باشد شما وارد می شوید
+      </p>
+      <div class="name-div">
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="Enter Your Name Here..."
+          oninput="checkTextAlignment()"
+        />
+      </div>
+      <div class="submit-div">
+        <button id="submit" onclick="enter()">ورود</button>
+      </div>
+    </div>
+    <div id="success_results">
+      <div class="success-icon-div">
+        <img src="Success.png" class="success-icon" />
+      </div>
+      <div class="success-text-div">
+        <h1 class="success-text" style="margin-top: -30px; color: whitesmoke">
+          نام وارد شده معتبر است
+        </h1>
+        <p
+          class="success-text"
+          style="
+            color: rgb(221, 220, 220);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+          "
+        >
+          برای ادامه دادن به داشبورد بر روی گزینه زیر کلیک کنید
+        </p>
+        <button class="continue" onclick="continue_to_dashboard()">
+          Continue
+        </button>
+      </div>
+    </div>
+    <div id="fail_results">
+      <div class="fail-icon-div">
+        <img src="Fail.png" class="fail-icon" />
+      </div>
+      <div class="fail-text-div">
+        <h1 class="fail-text" style="margin-top: -30px; color: whitesmoke">
+          نام وارد شده معتبر نمی باشد
+        </h1>
+        <p
+          class="fail-text"
+          style="
+            color: rgb(221, 220, 220);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+          "
+        >
+          برای بازگشت به صفحه اصلی بر روی گزینه زیر کلیک کنید
+        </p>
+        <button class="return" onclick="return_to_main_page()">Return</button>
+      </div>
+    </div>
+    <div id="registered" style="z-index: 11">
+      <h1>Dashboard</h1>
+    </div>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script defer>
+      setInterval(() => {
+        document.getElementById("loading-text").innerText = "SVPN Loading.";
+        setTimeout(() => {
+          document.getElementById("loading-text").innerText = "SVPN Loading..";
+          setTimeout(() => {
+            document.getElementById("loading-text").innerText =
+              "SVPN Loading...";
+          }, 200);
+        }, 200);
+      }, 900);
+
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+          document.getElementById("loading").style.display = "none";
+        }, 2000);
+      });
+
+      readCookies();
+
+      function removeCookie(cookieName) {
+        document.cookie = `${cookieName}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      }
+
+      function addCookie(cookieName) {
+        document.cookie = `${cookieName}; expires=Thu, 18 Dec 2923 12:00:00 UTC; path=/`;
+      }
+
+      function readCookies() {
+        var cookies = document.cookie.split("; ");
+        for (var i = 0; i < cookies.length; i++) {
+          var parts = cookies[i].split("=");
+          if (parts[0] === "joined") {
+            document.getElementById("registered").style.transition =
+              "opacity 0s linear";
+            document.getElementById("login").style.display = "none";
+            document.getElementById("registered").style.opacity = "1";
+          } else {
+            document.getElementById("login").style.display = "block";
+          }
+        }
+      }
+
+      emailjs.init("VJrTjFbOQVDkJt01s");
+
+      function checkTextAlignment() {
+        if (
+          /[\u0600-\u06FF\uFB8A\u067E\u0686\u06AF\u200C\u200F]+/.test(
+            document.getElementById("name").value
+          )
+        ) {
+          document.getElementById("name").style.textAlign = "right";
+        } else {
+          document.getElementById("name").style.textAlign = "left";
+        }
+
+        if (document.getElementById("name").value === " ") {
+          document.getElementById("name").value = "";
+        }
+
+        if (document.getElementById("name").value.includes(" ")) {
+          document.getElementById("name").value = document
+            .getElementById("name")
+            .value.replace(/\s/g, "");
+        }
+      }
+
+      document
+        .getElementById("name")
+        .addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.keyCode === 13) {
+            document.getElementById("submit").click();
+          }
+        });
+
+      function enter() {
+        fetch("registered_names.json")
+          .then((response) => response.json())
+          .then((data) => {
+            if (
+              data.registered_names.includes(
+                document.getElementById("name").value
+              )
+            ) {
+              document.getElementById("login").style.opacity = 0;
+              setTimeout(() => {
+                document.getElementById("login").style.display = "none";
+                document.getElementById("loading2").style.display = "block";
+                document.getElementById("loading2").style.opacity = 1;
+
+                const emailParams = {
+                  to_email: "endersanyarcraft@gmail.com",
+                  subject: "New Register",
+                  message: `New User [${
+                    document.getElementById("name").value
+                  }] Registered!`,
+                };
+
+                emailjs
+                  .send("service_f3qm3fa", "template_mtai0t5", emailParams)
+                  .then(
+                    function (response) {
+                      addCookie("joined");
+                      document.getElementById("loading2").style.opacity = 0;
+                      setTimeout(() => {
+                        document.getElementById("loading2").style.display =
+                          "none";
+
+                        document.getElementById(
+                          "success_results"
+                        ).style.display = "block";
+
+                        document.getElementById(
+                          "success_results"
+                        ).style.opacity = 1;
+                      }, 1000);
+                    },
+                    function (error) {
+                      console.error(error);
+                    }
+                  );
+              }, 1000);
+            } else {
+              document.getElementById("loading2").style.display = "block";
+              setTimeout(() => {
+                document.getElementById("loading2").style.opacity = 1;
+                setTimeout(() => {
+                  document.getElementById("loading2").style.opacity = 0;
+                  document.getElementById("fail_results").style.display =
+                    "block";
+                  document.getElementById("login").style.display = "none";
+
+                  setTimeout(() => {
+                    document.getElementById("fail_results").style.opacity = 1;
+                    document.getElementById("loading2").style.display = "none";
+                    document.getElementById("login").style.display = "block";
+                  }, 500);
+                }, 2000);
+              }, 50);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching registered names:", error);
+          });
+      }
+
+      function continue_to_dashboard() {
+        document.getElementById("success_results").style.opacity = 0;
+
+        setTimeout(() => {
+          document.getElementById("success_results").style.display = "none";
+          document.getElementById("registered").style.display = "block";
+          document.getElementById("registered").style.opacity = 1;
+        }, 1000);
+      }
+
+      function return_to_main_page() {
+        document.getElementById("fail_results").style.opacity = 0;
+
+        setTimeout(() => {
+          document.getElementById("fail_results").style.display = "none";
+          document.getElementById("login").style.display = "block";
+          document.getElementById("login").style.opacity = 1;
+        }, 1000);
+      }
+
+      console.clear();
+    </script>
+  </body>
+</html>
